@@ -7,7 +7,7 @@ import org.apache.flink.table.api.scala._
  * Author z
  * Date 2020-11-16 22:38:48
  */
-object TableExample {
+object SQL_Example1 {
   def main(args: Array[String]): Unit = {
     val env = StreamExecutionEnvironment.getExecutionEnvironment
     env.setParallelism(1)
@@ -18,25 +18,25 @@ object TableExample {
       
         val arr = data.split(",")
        
-        Sensor(arr(0),arr(1).toDouble,arr(2).toLong)
+        Sensor(arr(0),arr(1),arr(2))
         //println(Sensor(arr(0),arr(1).toDouble,arr(2).toLong))
       })
 
     //创建表执行环境
     val tableEnv = StreamTableEnvironment.create(env)
-    //基于数据流，转换成一张表
+    
     val dataTable = tableEnv.fromDataStream(inputStream)
-    //调用table api,得到转换结果
-    val resultTable = dataTable.select("name,dt").filter("name == 'sensor_1'")
-    
-    val resultStream:DataStream[(String,Double)] = resultTable.toAppendStream[(String,Double)]
-    
-    
+    //基于sql数据流，转换成一张表
+    val resultSqlTable = tableEnv.sqlQuery("select name,dt from "+dataTable)
+    //转换成流输出
+    val resultStream: DataStream[(String, String)] = resultSqlTable
+      .toAppendStream[(String,String)]
+
     resultStream.print()
-    resultTable.printSchema()
+    resultSqlTable.printSchema()
     
     env.execute()
     
   }
 }
-case class Sensor(name:String,dt:Double,id:Long)
+
