@@ -4,7 +4,7 @@ import org.apache.flink.api.scala.ExecutionEnvironment
 import org.apache.flink.streaming.api.scala._
 import org.apache.flink.table.api.{DataTypes, EnvironmentSettings, Table, TableEnvironment}
 import org.apache.flink.table.api.scala._
-import org.apache.flink.table.descriptors.{Csv, FileSystem, OldCsv, Schema}
+import org.apache.flink.table.descriptors.{Csv, FileSystem, Kafka, OldCsv, Schema}
 
 /**
  * Author z
